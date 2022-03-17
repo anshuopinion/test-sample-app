@@ -125,6 +125,7 @@ const Home = () => {
           <Flex gap={4}>
             {[30, 60, 90].map((days) => (
               <Box
+                fontWeight={dayInterval === days ? "bold" : "normal"}
                 key={days}
                 onClick={() => changeIntervalHandler(days)}
               >{`${days}D`}</Box>
