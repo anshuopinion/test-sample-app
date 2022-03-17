@@ -12,8 +12,19 @@ import {
 
 import { Line } from "react-chartjs-2";
 import faker from "faker";
-import { Box, Button, Container, Flex, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  Flex,
+  HStack,
+  Stack,
+  Switch,
+  Text,
+} from "@chakra-ui/react";
 import { eachDayOfInterval, format, subDays } from "date-fns";
+import { IDataSets } from "../interface/IDataSets";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,9 +40,51 @@ ChartJS.register(
 const Home = () => {
   const [dayInterval, setDateInterval] = useState(30);
   const [labels, setLabels] = useState<string[]>([]);
+  const [datasets, setDatasets] = useState<IDataSets[]>([]);
 
-  // get last 30 days
+  const dataSetsStored = [
+    {
+      label: "AAVE v2",
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
+      borderColor: "rgb(255, 99, 132)",
+      backgroundColor: "rgba(255, 99, 132, 0.5)",
+    },
+    {
+      label: "Compound",
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
+      borderColor: "rgb(53, 162, 235)",
+      backgroundColor: "rgba(53, 162, 235, 0.5)",
+    },
+  ];
 
+  const updatedataSetHandler = (dataSetsStoredValue: IDataSets[]) => {
+    setDatasets(
+      dataSetsStoredValue.filter((set) =>
+        datasets.map((data) => data.label).includes(set.label)
+      )
+    );
+
+    console.log(
+      dataSetsStoredValue.filter((set) =>
+        datasets.map((data) => data.label).includes(set.label)
+      )
+    );
+  };
+
+  const dataSetHandler = (dataSet: IDataSets) => {
+    if (!datasets.map((data) => data.label).includes(dataSet.label)) {
+      setDatasets([...datasets, dataSet]);
+    } else {
+      setDatasets(
+        datasets.filter((dataset) => dataset.label !== dataSet.label)
+      );
+    }
+  };
+
+  const changeIntervalHandler = (days: number) => {
+    setDateInterval(days);
+    updatedataSetHandler(dataSetsStored);
+  };
   useEffect(() => {
     const result = eachDayOfInterval({
       end: new Date(),
@@ -40,31 +93,21 @@ const Home = () => {
     setLabels(result);
   }, [setLabels, dayInterval]);
 
-  console.log(
-    labels,
-    labels.map(() => faker.datatype.number({ min: 0, max: 50 }))
-  );
-
   const data = {
     labels,
-    datasets: [
-      {
-        label: "AAVE v2",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-      {
-        label: "Compound",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
-        borderColor: "rgb(53, 162, 235)",
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
+    datasets: [...datasets],
   };
-
   return (
     <Container maxW={"container.lg"}>
+      <Flex gap="4" p="4">
+        {dataSetsStored.map((dataSet) => (
+          <HStack key={dataSet.label}>
+            <Text>{dataSet.label}</Text>
+            <Switch onChange={() => dataSetHandler(dataSet)} />
+          </HStack>
+        ))}
+      </Flex>
+      <Flex></Flex>
       <Stack boxShadow="xl" borderRadius="xl" p="4">
         <Flex justify="space-between">
           <Flex></Flex>
@@ -72,7 +115,7 @@ const Home = () => {
             {[30, 60, 90].map((days) => (
               <Box
                 key={days}
-                onClick={() => setDateInterval(days)}
+                onClick={() => changeIntervalHandler(days)}
               >{`${days}D`}</Box>
             ))}
           </Flex>
@@ -82,8 +125,10 @@ const Home = () => {
             <Line
               options={{
                 responsive: true,
+
                 plugins: {
                   legend: {
+                    display: false,
                     // onClick: () => {},
                     position: "bottom" as const,
                   },
