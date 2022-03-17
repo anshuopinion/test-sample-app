@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { GiExpand } from "react-icons/gi";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,7 +19,9 @@ import {
   Checkbox,
   Container,
   Flex,
+  Heading,
   HStack,
+  Icon,
   Stack,
   Switch,
   Text,
@@ -41,7 +44,11 @@ const Home = () => {
   const [dayInterval, setDateInterval] = useState(30);
   const [labels, setLabels] = useState<string[]>([]);
   const [datasets, setDatasets] = useState<IDataSets[]>([]);
-
+  const [zoom, setZoom] = useState(false);
+  const data = {
+    labels,
+    datasets: [...datasets],
+  };
   const dataSetsStored = [
     {
       label: "AAVE v2",
@@ -63,12 +70,6 @@ const Home = () => {
         datasets.map((data) => data.label).includes(set.label)
       )
     );
-
-    console.log(
-      dataSetsStoredValue.filter((set) =>
-        datasets.map((data) => data.label).includes(set.label)
-      )
-    );
   };
 
   const dataSetHandler = (dataSet: IDataSets) => {
@@ -83,8 +84,12 @@ const Home = () => {
 
   const changeIntervalHandler = (days: number) => {
     setDateInterval(days);
-    updatedataSetHandler(dataSetsStored);
   };
+
+  const toggleZoom = () => {
+    setZoom(!zoom);
+  };
+
   useEffect(() => {
     const result = eachDayOfInterval({
       end: new Date(),
@@ -93,12 +98,13 @@ const Home = () => {
     setLabels(result);
   }, [setLabels, dayInterval]);
 
-  const data = {
-    labels,
-    datasets: [...datasets],
-  };
+  useEffect(() => {
+    updatedataSetHandler(dataSetsStored);
+    // This is be executed when `loading` state changes
+  }, [labels]);
+
   return (
-    <Container maxW={"container.lg"}>
+    <Container maxW={zoom ? "100%" : "container.lg"}>
       <Flex gap="4" p="4">
         {dataSetsStored.map((dataSet) => (
           <HStack key={dataSet.label}>
@@ -107,7 +113,12 @@ const Home = () => {
           </HStack>
         ))}
       </Flex>
-      <Flex></Flex>
+      <Flex p="2" bg="gray.200" justify="space-between">
+        <Heading fontSize="xl">Liquidty Coverage Ratio (LCR)</Heading>
+        <HStack fontSize="2xl">
+          <GiExpand onClick={toggleZoom} />
+        </HStack>
+      </Flex>
       <Stack boxShadow="xl" borderRadius="xl" p="4">
         <Flex justify="space-between">
           <Flex></Flex>
