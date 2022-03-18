@@ -16,7 +16,7 @@ const DataSetSwitcher: FC<DataSetSwitcherProps> = ({
       {dataSetsStored.map((dataSet) => (
         <HStack key={dataSet.label}>
           <Text>{dataSet.label}</Text>
-          <Switch onChange={() => dataSetHandler(dataSet)} />
+          <Switch colorScheme="pink" onChange={() => dataSetHandler(dataSet)} />
         </HStack>
       ))}
     </Flex>

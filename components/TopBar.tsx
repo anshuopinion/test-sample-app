@@ -12,8 +12,8 @@ interface TopBarProps {
 
 const TopBar: FC<TopBarProps> = ({ downloadData, toggleZoom }) => {
   return (
-    <Flex p="2" bg="gray.200" justify="space-between">
-      <Heading fontSize="xl">Liquidty Coverage Ratio (LCR)</Heading>
+    <Flex p="2" bg="gray.100" justify="space-between" border="1px solid #000">
+      <Heading fontSize="lg">Liquidty Coverage Ratio (LCR)</Heading>
       <HStack fontSize="2xl">
         <CSVDownloader data={downloadData}>
           <GrDocumentDownload />

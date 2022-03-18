@@ -160,68 +160,69 @@ const Home = () => {
         dataSetHandler={dataSetHandler}
         dataSetsStored={dataSetsStored}
       />
-      <TopBar
-        downloadData={() => convertDataToJsonFromObject(data)}
-        toggleZoom={toggleZoom}
-      />
 
-      <Stack boxShadow="xl" borderRadius="xl" p="4">
-        <IntervalToggler
-          changeIntervalHandler={changeIntervalHandler}
-          dayInterval={dayInterval}
+      <Stack spacing="1px">
+        <TopBar
+          downloadData={() => convertDataToJsonFromObject(data)}
+          toggleZoom={toggleZoom}
         />
+        <Stack boxShadow="xl" borderBottomRadius="xl" border="1px solid #000">
+          <IntervalToggler
+            changeIntervalHandler={changeIntervalHandler}
+            dayInterval={dayInterval}
+          />
+          <Flex p="4">
+            {labels.length > 0 && (
+              <Line
+                options={{
+                  scales: {
+                    x: {
+                      grid: {
+                        display: false,
+                      },
+                      axis: "x",
+                      type: "time",
+                      time: {
+                        minUnit: "day",
 
-        <Flex>
-          {labels.length > 0 && (
-            <Line
-              options={{
-                scales: {
-                  x: {
-                    grid: {
-                      display: false,
-                    },
-                    axis: "x",
-                    type: "time",
-                    time: {
-                      minUnit: "day",
+                        unit: "day",
+                        stepSize: 7,
 
-                      unit: "day",
-                      stepSize: 7,
-
-                      // displayFormats: {
-                      //   day: "dd",
-                      //   month: "MMM",
-                      //   year: "yyyy",
-                      // },
-                    },
-                    adapters: {
-                      date: {
-                        locale: enIN,
+                        // displayFormats: {
+                        //   day: "dd",
+                        //   month: "MMM",
+                        //   year: "yyyy",
+                        // },
+                      },
+                      adapters: {
+                        date: {
+                          locale: enIN,
+                        },
                       },
                     },
                   },
-                },
 
-                responsive: true,
+                  responsive: true,
 
-                plugins: {
-                  legend: {
-                    display: false,
-                    // onClick: () => {},
-                    position: "bottom" as const,
+                  plugins: {
+                    legend: {
+                      display: false,
+                      // onClick: () => {},
+                      position: "bottom" as const,
+                    },
+                    title: {
+                      display: false,
+                      text: "Chart.js Line Chart",
+                    },
                   },
-                  title: {
-                    display: false,
-                    text: "Chart.js Line Chart",
-                  },
-                },
-              }}
-              data={{
-                datasets,
-              }}
-            />
-          )}
-        </Flex>
+                }}
+                data={{
+                  datasets,
+                }}
+              />
+            )}
+          </Flex>
+        </Stack>
       </Stack>
     </Container>
   );
