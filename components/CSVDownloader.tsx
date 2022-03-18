@@ -4,13 +4,11 @@ interface CSVDownloaderProps {
   data: any;
 }
 
-const CSVDownloader: FC<CSVDownloaderProps> = ({ data }) => {
+const CSVDownloader: FC<CSVDownloaderProps> = ({ data, children }) => {
   const { CSVDownloader, Type } = useCSVDownloader();
-   
 
   return (
     <CSVDownloader
-    
       type={Type.Button}
       filename={"filename"}
       bom={true}
@@ -19,7 +17,7 @@ const CSVDownloader: FC<CSVDownloaderProps> = ({ data }) => {
       }}
       data={data}
     >
-      Download
+      {children}
     </CSVDownloader>
   );
 };

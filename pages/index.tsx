@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { GiExpand } from "react-icons/gi";
+import { GrDocumentDownload } from "react-icons/gr";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,6 +30,8 @@ import {
 import { eachDayOfInterval, format, subDays } from "date-fns";
 import { IDataSets } from "../interface/IDataSets";
 import CSVDownloader from "../components/CSVDownloader";
+import TopBar from "../components/TopBar";
+import IntervalToggler from "../components/IntervalToggler";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -146,26 +149,17 @@ const Home = () => {
           </HStack>
         ))}
       </Flex>
-      <Flex p="2" bg="gray.200" justify="space-between">
-        <Heading fontSize="xl">Liquidty Coverage Ratio (LCR)</Heading>
-        <HStack fontSize="2xl">
-          <CSVDownloader data={convertDataToJsonFromObject(data)} />
-          <GiExpand onClick={toggleZoom} />
-        </HStack>
-      </Flex>
+      <TopBar
+        downloadData={() => convertDataToJsonFromObject(data)}
+        toggleZoom={toggleZoom}
+      />
+
       <Stack boxShadow="xl" borderRadius="xl" p="4">
-        <Flex justify="space-between">
-          <Flex></Flex>
-          <Flex gap={4}>
-            {[30, 60, 90].map((days) => (
-              <Box
-                fontWeight={dayInterval === days ? "bold" : "normal"}
-                key={days}
-                onClick={() => changeIntervalHandler(days)}
-              >{`${days}D`}</Box>
-            ))}
-          </Flex>
-        </Flex>
+        <IntervalToggler
+          changeIntervalHandler={changeIntervalHandler}
+          dayInterval={dayInterval}
+        />
+
         <Flex>
           {labels.length > 0 && (
             <Line
