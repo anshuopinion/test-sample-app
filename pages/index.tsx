@@ -155,7 +155,7 @@ const Home = () => {
   console.log(data);
 
   return (
-    <Container maxW={zoom ? "100%" : "container.lg"}>
+    <Container maxW={zoom ? "100%" : "container.xl"}>
       <DataSetSwitcher
         dataSetHandler={dataSetHandler}
         dataSetsStored={dataSetsStored}
@@ -166,15 +166,21 @@ const Home = () => {
           downloadData={() => convertDataToJsonFromObject(data)}
           toggleZoom={toggleZoom}
         />
-        <Stack boxShadow="xl" borderBottomRadius="xl" border="1px solid #000">
+        <Stack
+          spacing={0}
+          boxShadow="md"
+          borderBottomRadius="md"
+          border="1px solid #000"
+        >
           <IntervalToggler
             changeIntervalHandler={changeIntervalHandler}
             dayInterval={dayInterval}
           />
-          <Flex p="4">
+          <Flex px={4} pb={4} h={zoom ? "70vh" : "350px"}>
             {labels.length > 0 && (
               <Line
                 options={{
+                  maintainAspectRatio: false,
                   scales: {
                     x: {
                       grid: {
