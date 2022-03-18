@@ -32,6 +32,7 @@ import { IDataSets } from "../interface/IDataSets";
 import CSVDownloader from "../components/CSVDownloader";
 import TopBar from "../components/TopBar";
 import IntervalToggler from "../components/IntervalToggler";
+import DataSetSwitcher from "../components/DataSetSwitcher";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -98,8 +99,6 @@ const Home = () => {
     return finalData;
   };
 
-  console.log(convertDataToJsonFromObject(data));
-
   const updatedataSetHandler = (dataSetsStoredValue: IDataSets[]) => {
     setDatasets(
       dataSetsStoredValue.filter((set) =>
@@ -141,14 +140,10 @@ const Home = () => {
 
   return (
     <Container maxW={zoom ? "100%" : "container.lg"}>
-      <Flex gap="4" p="4">
-        {dataSetsStored.map((dataSet) => (
-          <HStack key={dataSet.label}>
-            <Text>{dataSet.label}</Text>
-            <Switch onChange={() => dataSetHandler(dataSet)} />
-          </HStack>
-        ))}
-      </Flex>
+      <DataSetSwitcher
+        dataSetHandler={dataSetHandler}
+        dataSetsStored={dataSetsStored}
+      />
       <TopBar
         downloadData={() => convertDataToJsonFromObject(data)}
         toggleZoom={toggleZoom}
