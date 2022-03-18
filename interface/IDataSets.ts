@@ -1,6 +1,9 @@
 export interface IDataSets {
   label: string;
-  data: number[];
+  data: {
+    x: string;
+    y: number;
+  }[];
   borderColor: string;
   backgroundColor: string;
 }

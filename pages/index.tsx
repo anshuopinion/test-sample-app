@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { GiExpand } from "react-icons/gi";
-import { GrDocumentDownload } from "react-icons/gr";
+
+import "chartjs-adapter-date-fns";
+import { enIN } from "date-fns/locale";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,6 +11,8 @@ import {
   Title,
   Tooltip,
   Legend,
+  TimeScale,
+  DateAdapter,
 } from "chart.js";
 
 import { Line } from "react-chartjs-2";
@@ -40,7 +43,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  TimeScale
 );
 
 const Home = () => {
@@ -55,13 +59,23 @@ const Home = () => {
   const dataSetsStored = [
     {
       label: "AAVE v2",
-      data: labels.map(() => faker.datatype.number({ min: 40, max: 50 })),
+      data: labels.map((value, i) => {
+        return {
+          x: format(new Date(value), "yyyy-MM-dd"),
+          y: faker.datatype.number({ min: i, max: i + 3 }),
+        };
+      }),
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
     },
     {
       label: "Compound",
-      data: labels.map(() => faker.datatype.number({ min: 40, max: 50 })),
+      data: labels.map((value, i) => {
+        return {
+          x: format(new Date(value), "yyyy-MM-dd"),
+          y: faker.datatype.number({ min: i + 10, max: i + 13 }),
+        };
+      }),
       borderColor: "rgb(53, 162, 235)",
       backgroundColor: "rgba(53, 162, 235, 0.5)",
     },
@@ -129,7 +143,7 @@ const Home = () => {
     const result = eachDayOfInterval({
       end: new Date(),
       start: new Date(subDays(new Date(), dayInterval)),
-    }).map((date) => format(date, "MMM dd"));
+    }).map((date) => format(date, "yyyy-MM-dd"));
     setLabels(result);
   }, [setLabels, dayInterval]);
 
@@ -137,6 +151,8 @@ const Home = () => {
     updatedataSetHandler(dataSetsStored);
     // This is be executed when `loading` state changes
   }, [labels]);
+
+  console.log(data);
 
   return (
     <Container maxW={zoom ? "100%" : "container.lg"}>
@@ -159,6 +175,30 @@ const Home = () => {
           {labels.length > 0 && (
             <Line
               options={{
+                scales: {
+                  x: {
+                    axis: "x",
+                    type: "time",
+                    time: {
+                      minUnit: "day",
+
+                      unit: "day",
+                      stepSize: 7,
+
+                      // displayFormats: {
+                      //   day: "dd",
+                      //   month: "MMM",
+                      //   year: "yyyy",
+                      // },
+                    },
+                    adapters: {
+                      date: {
+                        locale: enIN,
+                      },
+                    },
+                  },
+                },
+
                 responsive: true,
 
                 plugins: {
@@ -173,7 +213,9 @@ const Home = () => {
                   },
                 },
               }}
-              data={data}
+              data={{
+                datasets,
+              }}
             />
           )}
         </Flex>
