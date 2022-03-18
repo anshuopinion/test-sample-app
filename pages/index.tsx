@@ -177,6 +177,9 @@ const Home = () => {
               options={{
                 scales: {
                   x: {
+                    grid: {
+                      display: false,
+                    },
                     axis: "x",
                     type: "time",
                     time: {
