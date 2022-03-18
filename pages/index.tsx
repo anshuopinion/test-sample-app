@@ -52,13 +52,13 @@ const Home = () => {
   const dataSetsStored = [
     {
       label: "AAVE v2",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
+      data: labels.map(() => faker.datatype.number({ min: 40, max: 50 })),
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
     },
     {
       label: "Compound",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
+      data: labels.map(() => faker.datatype.number({ min: 40, max: 50 })),
       borderColor: "rgb(53, 162, 235)",
       backgroundColor: "rgba(53, 162, 235, 0.5)",
     },
