@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { FC } from "react";
 import { useCSVDownloader } from "react-papaparse";
 interface CSVDownloaderProps {
@@ -10,7 +11,7 @@ const CSVDownloader: FC<CSVDownloaderProps> = ({ data, children }) => {
   return (
     <CSVDownloader
       type={Type.Button}
-      filename={"filename"}
+      filename={format(new Date(), "yyyy-MM-dd")}
       bom={true}
       config={{
         delimiter: ";",
