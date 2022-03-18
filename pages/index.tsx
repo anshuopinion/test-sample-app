@@ -28,6 +28,7 @@ import {
 } from "@chakra-ui/react";
 import { eachDayOfInterval, format, subDays } from "date-fns";
 import { IDataSets } from "../interface/IDataSets";
+import CSVDownloader from "../components/CSVDownloader";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -37,8 +38,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-// const labels = ["January", "February", "March", "April", "May", "June", "July"];
 
 const Home = () => {
   const [dayInterval, setDateInterval] = useState(30);
@@ -63,6 +62,40 @@ const Home = () => {
       backgroundColor: "rgba(53, 162, 235, 0.5)",
     },
   ];
+
+  const convertDataToJsonFromObject = (data: {
+    labels: string[];
+    datasets: IDataSets[];
+  }) => {
+    const { labels, datasets } = data;
+
+    const labelsJsonData = labels.map((value) => {
+      return {
+        Date: value,
+      };
+    });
+
+    const datasetsJson = datasets.map((dataset) => {
+      const data = dataset.data.map((value) => {
+        return {
+          [dataset.label]: value,
+        };
+      });
+      return data;
+    });
+
+    const finalData = labelsJsonData.map((value) => {
+      let obj = {};
+      datasetsJson.forEach((dataset) => {
+        obj = { ...obj, ...dataset[0] };
+      });
+      return { ...value, ...obj };
+    });
+
+    return finalData;
+  };
+
+  console.log(convertDataToJsonFromObject(data));
 
   const updatedataSetHandler = (dataSetsStoredValue: IDataSets[]) => {
     setDatasets(
@@ -116,6 +149,7 @@ const Home = () => {
       <Flex p="2" bg="gray.200" justify="space-between">
         <Heading fontSize="xl">Liquidty Coverage Ratio (LCR)</Heading>
         <HStack fontSize="2xl">
+          <CSVDownloader data={convertDataToJsonFromObject(data)} />
           <GiExpand onClick={toggleZoom} />
         </HStack>
       </Flex>
