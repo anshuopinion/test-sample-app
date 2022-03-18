@@ -110,8 +110,9 @@ const Home = () => {
     const newFinalData = finalData.map((value) => {
       return {
         Date: value.Date,
-
+        // @ts-ignore.
         ...value["0"],
+        // @ts-ignore.
         ...value["1"],
       };
     });
