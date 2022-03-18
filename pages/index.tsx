@@ -87,31 +87,39 @@ const Home = () => {
   }) => {
     const { labels, datasets } = data;
 
-    const labelsJsonData = labels.map((value) => {
-      return {
-        Date: value,
-      };
-    });
-
     const datasetsJson = datasets.map((dataset) => {
       const data = dataset.data.map((value) => {
         return {
-          [dataset.label]: value,
+          [dataset.label]: value.y,
         };
       });
       return data;
     });
 
-    const finalData = labelsJsonData.map((value) => {
-      let obj = {};
-      datasetsJson.forEach((dataset) => {
-        obj = { ...obj, ...dataset[0] };
-      });
-      return { ...value, ...obj };
+    const finalData = labels.map((value, i) => {
+      return {
+        Date: value,
+        ...datasetsJson.map((dataset) => {
+          return {
+            ...dataset[i],
+          };
+        }),
+      };
     });
 
-    return finalData;
+    const newFinalData = finalData.map((value) => {
+      return {
+        Date: value.Date,
+
+        ...value["0"],
+        ...value["1"],
+      };
+    });
+
+    return newFinalData;
   };
+
+  // combine keys of two array and join them in single convertDataToJsonFromObject
 
   const updatedataSetHandler = (dataSetsStoredValue: IDataSets[]) => {
     setDatasets(
